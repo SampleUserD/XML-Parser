@@ -21,6 +21,7 @@ class XMLDOMBuilder:
         return self.__current__()
 
     # -------------------------------------------------------------#
+
     @property
     def __done__(self):
         return self.__counter__ >= len(self.__tokens__)
@@ -50,11 +51,11 @@ class XMLDOMBuilder:
     # -------------------------------------------------------------#
 
     def build(self):
-        __global__ = XMLElement('__global__')
+        document = XMLElement('Document')
 
         while not is_tag(self.__current__()) and not self.__done__:
             if is_text(self.__current__()):
-                __global__.append_child(XMLText(get_value(self.__current__()), __global__))
+                document.append_child(XMLText(get_value(self.__current__()), document))
             else:
                 raise Exception()
             self.__peek__()
@@ -62,12 +63,12 @@ class XMLDOMBuilder:
         while not self.__done__:
             current_token = self.__current__()
             if is_tag(current_token):
-                __global__.append_child(self.__build_tree__(__global__))
+                document.append_child(self.__build_tree__(document))
             elif is_text(current_token):
-                __global__.append_child(XMLText(get_value(current_token), __global__))
+                document.append_child(XMLText(get_value(current_token), document))
             else:
                 raise Exception()
             self.__peek__()
 
-        return __global__
+        return document
 
