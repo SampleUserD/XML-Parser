@@ -1,4 +1,4 @@
-from tokens.comps import is_tag, is_text
+from tokens.comps import is_tag, is_text, is_closing_tag
 from objects.tag.utils import *
 from objects import *
 
@@ -30,7 +30,7 @@ class XMLDOMBuilder:
         element.__parent__ = parent
         self.__peek__()
 
-        while get_tag(token) != get_tag(self.__current__()):
+        while get_tag(token) != get_tag(self.__current__()) or not is_closing_tag(self.__current__()):
             if is_tag(self.__current__()):
                 element.append_child(self.__build_tree__(element))
             elif is_text(self.__current__()):

@@ -18,7 +18,9 @@ code = '''
     <!--
     <Text>Hello world!</Text>
     -->
-    <Text>Hello!</Text>
+    <Text>
+        <Text>Hello!</Text>
+    </Text>
 </Button>
 '''
 DOM = parse(code)
