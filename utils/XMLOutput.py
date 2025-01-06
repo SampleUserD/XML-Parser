@@ -11,7 +11,7 @@ def output(tree, offset=0):
         if isinstance(child, Element):
             output(child, offset + 1)
         elif isinstance(child, Text):
-            if match('\\S', child.value):
-                print(f'{'\t'*offset}\t"{child.value}"')
+            if child.value.strip() != str():
+                print(f'{'\t'*offset}\t"{child.value.strip()}"')
 
     print(f'{'\t' * offset}</{tree.tag}>')

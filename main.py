@@ -14,7 +14,7 @@ root.geometry('300x500')
 # Продумать API для работы с XML-деревом
 
 code = '''
-Hello world!
+Hello world! 
 Hello world 2!
 <Button x="100">
     <!--
@@ -42,7 +42,6 @@ def handle_title(node: XMLElement):
 
 
 def handle_text(node: XMLText):
-    print(node.value)
     label = Label(text=node.value)
     label.pack(anchor="nw")
 
