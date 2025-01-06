@@ -1,8 +1,6 @@
 from tokens.comps import is_tag, is_text
 from objects.tag.utils import *
-
-from objects.Element import Element
-from objects.Text import Text
+from objects import *
 
 
 class XMLDOMBuilder:
@@ -25,10 +23,10 @@ class XMLDOMBuilder:
 
     def __build_tree__(self, parent):
         if not is_tag(self.__current__()):
-            return Element('__global__')
+            return XMLElement('__global__')
 
         token = self.__current__()
-        element = Element(get_tag(token), get_attributes(token))
+        element = XMLElement(get_tag(token), get_attributes(token))
         element.__parent__ = parent
         self.__peek__()
 
@@ -36,7 +34,7 @@ class XMLDOMBuilder:
             if is_tag(self.__current__()):
                 element.append_child(self.__build_tree__(element))
             elif is_text(self.__current__()):
-                text = Text(self.__current__()['value'])
+                text = XMLText(self.__current__()['value'])
                 text.__parent__ = element
                 element.append_child(text)
             else:
@@ -49,11 +47,11 @@ class XMLDOMBuilder:
     # -------------------------------------------------------------#
 
     def build(self):
-        __global__ = Element('__global__')
+        __global__ = XMLElement('__global__')
 
         while not is_tag(self.__current__()) and len(self.__tokens__) > self.__counter__:
             if is_text(self.__current__()):
-                text = Text(self.__current__()['value'])
+                text = XMLText(self.__current__()['value'])
                 text.__parent__ = __global__
                 __global__.append_child(text)
             else:
@@ -64,7 +62,7 @@ class XMLDOMBuilder:
             if is_tag(self.__current__()):
                 __global__.append_child(self.__build_tree__(__global__))
             elif is_text(self.__current__()):
-                text = Text(self.__current__()['value'])
+                text = XMLText(self.__current__()['value'])
                 text.__parent__ = __global__
                 __global__.append_child(text)
             else:
