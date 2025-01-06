@@ -43,7 +43,12 @@ class XMLCorrecter:
     def correct(self):
         while self.__counter__ < len(self.__tokens__):
             if is_tag(self.__current__()) and not self.__is_closing_tag_exists__():
-                self.__tokens__.insert(self.__counter__ + 1, { 'type': type.CLOSING_TAG, 'attributes': [], 'tag_type': get_tag(self.__current__())})
+                self.__tokens__.insert(
+                    self.__counter__ + 1,
+                    {
+                        'type': type.CLOSING_TAG,
+                        'attributes': [],
+                        'tag_type': get_tag(self.__current__())})
 
             self.__peek__()
 

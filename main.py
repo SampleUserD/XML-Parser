@@ -15,6 +15,7 @@ root.geometry('300x500')
 
 code = '''
 Hello world!
+Hello world 2!
 <Button>
     <!--
     <Text>Hello world!</Text>

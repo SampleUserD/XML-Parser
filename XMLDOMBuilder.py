@@ -24,7 +24,7 @@ class XMLDOMBuilder:
 
     # -------------------------------------------------------------#
 
-    def __for__(self, work: Callable):
+    def __with__(self, work: Callable):
         result = work(self.__current__())
         self.__peek__()
         return result
@@ -51,7 +51,7 @@ class XMLDOMBuilder:
 
     def __build_tree__(self, parent):
         tag = self.__current__()
-        element = self.__for__(lambda ct: XMLElement(get_tag(ct), get_attributes(ct), parent))
+        element = self.__with__(lambda ct: XMLElement(get_tag(ct), get_attributes(ct), parent))
 
         self.__add_elements_to_until__(
             element,
