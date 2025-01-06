@@ -8,11 +8,11 @@ class Element(Node):
     __parent__: Node = None
     __children__: list[Node] = []
 
-    def __init__(self, tag: str, attributes: dict[str, str] = {}):
+    def __init__(self, tag: str, attributes: dict[str, str] = {}, parent: Node = None):
         self.__tag__ = tag
         self.__attributes__ = attributes
         self.__children__ = []
-        self.__parent__ = None
+        self.__parent__ = parent
 
     def get_by_attribute(self, attr: str, value: str):
         result = []

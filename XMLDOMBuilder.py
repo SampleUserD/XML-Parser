@@ -1,5 +1,6 @@
 from tokens.comps import is_tag, is_text, is_closing_tag
-from objects.tag.utils import *
+from tokens.text import get_value
+from tokens.tag import get_tag, get_attributes
 from objects import *
 
 
@@ -20,23 +21,25 @@ class XMLDOMBuilder:
         return self.__current__()
 
     # -------------------------------------------------------------#
+    @property
+    def __done__(self):
+        return self.__counter__ >= len(self.__tokens__)
+
+    # -------------------------------------------------------------#
 
     def __build_tree__(self, parent):
         if not is_tag(self.__current__()):
             return XMLElement('__global__')
 
         token = self.__current__()
-        element = XMLElement(get_tag(token), get_attributes(token))
-        element.__parent__ = parent
+        element = XMLElement(get_tag(token), get_attributes(token), parent)
         self.__peek__()
 
         while get_tag(token) != get_tag(self.__current__()) or not is_closing_tag(self.__current__()):
             if is_tag(self.__current__()):
                 element.append_child(self.__build_tree__(element))
             elif is_text(self.__current__()):
-                text = XMLText(self.__current__()['value'])
-                text.__parent__ = element
-                element.append_child(text)
+                element.append_child(XMLText(get_value(self.__current__()), element))
             else:
                 raise Exception()
 
@@ -49,24 +52,22 @@ class XMLDOMBuilder:
     def build(self):
         __global__ = XMLElement('__global__')
 
-        while not is_tag(self.__current__()) and len(self.__tokens__) > self.__counter__:
+        while not is_tag(self.__current__()) and not self.__done__:
             if is_text(self.__current__()):
-                text = XMLText(self.__current__()['value'])
-                text.__parent__ = __global__
-                __global__.append_child(text)
+                __global__.append_child(XMLText(get_value(self.__current__()), __global__))
             else:
                 raise Exception()
             self.__peek__()
 
-        while self.__counter__ < len(self.__tokens__):
-            if is_tag(self.__current__()):
+        while not self.__done__:
+            current_token = self.__current__()
+            if is_tag(current_token):
                 __global__.append_child(self.__build_tree__(__global__))
-            elif is_text(self.__current__()):
-                text = XMLText(self.__current__()['value'])
-                text.__parent__ = __global__
-                __global__.append_child(text)
+            elif is_text(current_token):
+                __global__.append_child(XMLText(get_value(current_token), __global__))
             else:
                 raise Exception()
             self.__peek__()
 
         return __global__
+

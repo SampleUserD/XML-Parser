@@ -5,8 +5,9 @@ class Text(Node):
     __value__: str = str()
     __parent__: Node = None
 
-    def __init__(self, value: str):
-       self.__value__ = value
+    def __init__(self, value: str, parent: Node = None):
+        self.__value__ = value
+        self.__parent__ = parent
 
     @property
     def NODE_TYPE(self):

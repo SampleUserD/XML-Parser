@@ -1,5 +1,7 @@
 from tokens.comps import is_tag, is_closing_tag
-from objects.tag.utils import *
+from tokens import type
+
+from tokens.tag import *
 
 
 class XMLCorrecter:
