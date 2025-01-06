@@ -14,7 +14,8 @@ root.geometry('300x500')
 # Продумать API для работы с XML-деревом
 
 code = '''
-<Button width="100" height="50">
+Hello world!
+<Button>
     <!--
     <Text>Hello world!</Text>
     -->
@@ -28,9 +29,7 @@ DOM = parse(code)
 
 def handle_button(node: XMLElement):
     attrs = node.attributes
-    button = Button(text=node.get_by_tag_name('Text')[0].inner_text,
-                    width=int(attrs.get('width', 50)) // 30,
-                    height=int(attrs.get('height', 50)) // 50)
+    button = Button(text=node.get_by_tag_name('Text')[0].inner_text)
 
     button.pack(anchor="nw",
                 padx=float(attrs.get('x', 0)),

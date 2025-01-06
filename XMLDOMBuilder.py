@@ -3,6 +3,8 @@ from tokens.text import get_value
 from tokens.tag import get_tag, get_attributes
 from objects import *
 
+from typing import Callable
+
 
 class XMLDOMBuilder:
     __counter__ = 0
@@ -22,6 +24,25 @@ class XMLDOMBuilder:
 
     # -------------------------------------------------------------#
 
+    def __for__(self, work: Callable):
+        result = work(self.__current__())
+        self.__peek__()
+        return result
+
+    def __add_elements_to_until__(self, element: XMLElement, condition: Callable):
+        while not condition():
+            current_token = self.__current__()
+            if is_tag(current_token):
+                element.append_child(self.__build_tree__(element))
+            elif is_text(current_token):
+                element.append_child(XMLText(get_value(current_token), element))
+            else:
+                raise Exception()
+
+            self.__peek__()
+
+    # -------------------------------------------------------------#
+
     @property
     def __done__(self):
         return self.__counter__ >= len(self.__tokens__)
@@ -29,22 +50,14 @@ class XMLDOMBuilder:
     # -------------------------------------------------------------#
 
     def __build_tree__(self, parent):
-        if not is_tag(self.__current__()):
-            return XMLElement('__global__')
+        tag = self.__current__()
+        element = self.__for__(lambda ct: XMLElement(get_tag(ct), get_attributes(ct), parent))
 
-        token = self.__current__()
-        element = XMLElement(get_tag(token), get_attributes(token), parent)
-        self.__peek__()
-
-        while get_tag(token) != get_tag(self.__current__()) or not is_closing_tag(self.__current__()):
-            if is_tag(self.__current__()):
-                element.append_child(self.__build_tree__(element))
-            elif is_text(self.__current__()):
-                element.append_child(XMLText(get_value(self.__current__()), element))
-            else:
-                raise Exception()
-
-            self.__peek__()
+        self.__add_elements_to_until__(
+            element,
+            lambda:
+                get_tag(tag) == get_tag(self.__current__()) \
+                and is_closing_tag(self.__current__()))
 
         return element
 
@@ -53,22 +66,7 @@ class XMLDOMBuilder:
     def build(self):
         document = XMLElement('Document')
 
-        while not is_tag(self.__current__()) and not self.__done__:
-            if is_text(self.__current__()):
-                document.append_child(XMLText(get_value(self.__current__()), document))
-            else:
-                raise Exception()
-            self.__peek__()
-
-        while not self.__done__:
-            current_token = self.__current__()
-            if is_tag(current_token):
-                document.append_child(self.__build_tree__(document))
-            elif is_text(current_token):
-                document.append_child(XMLText(get_value(current_token), document))
-            else:
-                raise Exception()
-            self.__peek__()
+        self.__add_elements_to_until__(document, lambda: self.__done__)
 
         return document
 
