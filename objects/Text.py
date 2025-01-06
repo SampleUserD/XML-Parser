@@ -1,4 +1,4 @@
-from objects.Node import Node
+from xmlparser.objects.Node import Node
 
 
 class Text(Node):

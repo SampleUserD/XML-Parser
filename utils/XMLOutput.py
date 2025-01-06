@@ -1,4 +1,4 @@
-from objects import *
+from xmlparser.objects import *
 
 from re import match
 

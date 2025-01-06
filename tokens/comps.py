@@ -1,5 +1,5 @@
-from tokens import type
-from tokens.utils import get_type
+from xmlparser.tokens import type
+from xmlparser.tokens.utils import get_type
 
 
 def is_tag(token: dict[str, str]):

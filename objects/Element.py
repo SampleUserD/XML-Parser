@@ -1,5 +1,5 @@
-from objects.Node import Node
-from objects.Text import Text
+from xmlparser.objects.Node import Node
+from xmlparser.objects.Text import Text
 
 
 class Element(Node):
