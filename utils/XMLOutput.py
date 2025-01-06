@@ -5,7 +5,7 @@ from re import match
 
 
 def output(tree, offset=0):
-    print(f'{'\t'*offset}<{tree.tag}>')
+    print(f'{'\t'*offset}<{tree.tag}{' ' if len(tree.attributes.keys()) > 0 else ''}{' '.join(map(lambda x: f'{x}="{tree.attributes[x]}"', tree.attributes))}>')
 
     for child in tree.children:
         if isinstance(child, Element):

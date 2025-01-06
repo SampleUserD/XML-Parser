@@ -29,6 +29,14 @@ class XMLDOMBuilder:
         self.__peek__()
         return result
 
+    # -------------------------------------------------------------#
+
+    @property
+    def __done__(self):
+        return self.__counter__ >= len(self.__tokens__)
+
+    # -------------------------------------------------------------#
+
     def __add_elements_to_until__(self, element: XMLElement, condition: Callable):
         while not condition():
             current_token = self.__current__()
@@ -40,14 +48,6 @@ class XMLDOMBuilder:
                 raise Exception()
 
             self.__peek__()
-
-    # -------------------------------------------------------------#
-
-    @property
-    def __done__(self):
-        return self.__counter__ >= len(self.__tokens__)
-
-    # -------------------------------------------------------------#
 
     def __build_tree__(self, parent):
         tag = self.__current__()
