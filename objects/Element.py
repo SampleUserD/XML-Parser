@@ -37,6 +37,16 @@ class Element(Node):
     def append_child(self, child: Node) -> None:
         self.__children__.append(child)
 
+    def insert_after(self, node: Node, after: Node):
+        self.__children__.insert(self.__children__.index(after) + 1, node)
+
+    def insert_before(self, node: Node, after: Node):
+        self.__children__.insert(self.__children__.index(after) + 1, node)
+
+    def remove(self) -> None:
+        if isinstance(self.parent, Element):
+            self.parent.__children__.remove(self)
+
     def change_contents_to(self, contents: Node) -> Node:
         if isinstance(contents, Element):
             self.__children__ = contents.children
@@ -91,3 +101,11 @@ class Element(Node):
     @property
     def inner_xml(self):
         return str().join(map(lambda child: child.to_string(), self.child_elements))
+
+    @property
+    def next_sibling(self):
+        return self.parent.child_elements[self.parent.child_elements.index(self) + 1]
+
+    @property
+    def previous_sibling(self):
+        return self.parent.child_elements[self.parent.child_elements.index(self) - 1]
