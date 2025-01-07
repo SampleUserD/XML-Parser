@@ -43,6 +43,19 @@ class Element(Node):
         elif isinstance(contents, Text):
             self.__children__ = [contents]
 
+    def to_string(self) -> str:
+        string = f'<{self.tag}{' ' if len(self.attributes.keys()) > 0 else ''}{' '.join(map(lambda x: f'{x}="{self.attributes[x]}"', self.attributes))}>'
+
+        for child in self.children:
+            if isinstance(child, Element):
+                string += child.to_string()
+            elif isinstance(child, Text):
+                string += f'{child.value}'
+
+        string += f'</{self.tag}>'
+
+        return string
+
     @property
     def NODE_TYPE(self):
         return 0
@@ -74,3 +87,7 @@ class Element(Node):
     @property
     def inner_text(self):
         return self.text + str().join(map(lambda element: element.inner_text, self.child_elements))
+
+    @property
+    def inner_xml(self):
+        return str().join(map(lambda child: child.to_string(), self.child_elements))
